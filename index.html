@@ -16,6 +16,10 @@
             $scope.url = '';
           };
 
+          $scope.delete = function(index) {
+            $scope.links.splice(index, 1);
+          }
+
         }]);
     </script>
 
@@ -31,6 +35,7 @@
     <ol>
       <li ng-repeat="link in links">
         <a href="{{link.url}}">{{link.text}}</a>
+        <button ng-click="delete($index)" title="delete">x</button>
       </li>
     </ol>
 
