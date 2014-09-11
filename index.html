@@ -1,14 +1,38 @@
 <!doctype html>
-<html ng-app>
+<html ng-app="LinkApp">
   <head>
     <title>First Angular App</title>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
-  </head>
-  <body>
 
-    <input type="text" ng-model="some_text">
-    <br>
-    {{some_text}}
+    <script type="text/javascript">
+      angular.module('LinkApp', [])
+        .controller('LinkController', ['$scope', function($scope) {
+
+          $scope.links = [];
+
+          $scope.add = function() {
+            $scope.links.push( {text: $scope.text, url: $scope.url} );
+            $scope.text = '';
+            $scope.url = '';
+          };
+
+        }]);
+    </script>
+
+  </head>
+  <body ng-controller="LinkController">
+
+    <form ng-submit="add()">
+      <input type="text" ng-model="text">
+      <input type="text" ng-model="url" placeholder="http://">
+      <button type="submit">Add Link</button>
+    </form>
+
+    <ol>
+      <li ng-repeat="link in links">
+        <a href="{{link.url}}">{{link.text}}</a>
+      </li>
+    </ol>
 
   </body>
 </html>
