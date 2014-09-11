@@ -11,14 +11,14 @@
           $scope.links = [];
 
           $scope.add = function() {
-            $scope.links.push( {text: $scope.text, url: $scope.url} );
+            $scope.links.push( {text: $scope.text, url: $scope.url, clicks: 0} );
             $scope.text = '';
             $scope.url = '';
           };
 
           $scope.delete = function(index) {
             $scope.links.splice(index, 1);
-          }
+          };
 
         }]);
     </script>
@@ -33,8 +33,9 @@
     </form>
 
     <ol>
-      <li ng-repeat="link in links">
-        <a href="{{link.url}}">{{link.text}}</a>
+      <li ng-repeat="link in links | orderBy:'-clicks'">
+        <!-- link below temporarily disabled via js -->
+        <a href="javascript:void(0)/*{{link.url}}*/" ng-click="link.clicks=link.clicks+1">{{link.text}}</a>
         <button ng-click="delete($index)" title="delete">x</button>
       </li>
     </ol>
