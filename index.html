@@ -1,5 +1,8 @@
 <!doctype html>
-<html ng-app="LinkApp">
+<html lang="en" ng-app="LinkApp">
+  <!-- todo:
+    switch to better algorithm than just clicks: https://github.com/clux/decay
+  -->
   <head>
     <title>First Angular App</title>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
@@ -8,16 +11,33 @@
       angular.module('LinkApp', [])
         .controller('LinkController', ['$scope', function($scope) {
 
-          $scope.links = [];
+          $scope.groups = [];
+          $scope.last_groupid = 0;
+          $scope.last_linkid = 0;
 
-          $scope.add = function() {
-            $scope.links.push( {text: $scope.text, url: $scope.url, clicks: 0} );
+          $scope.addGroup = function() {
+            $scope.last_groupid++;
+            $scope.groups.push({ id: $scope.last_groupid, text: $scope.text, links: [], total_clicks: 0 });
             $scope.text = '';
-            $scope.url = '';
           };
 
-          $scope.delete = function(index) {
-            $scope.links.splice(index, 1);
+          $scope.addLink = function(group_id) {
+            $scope.last_linkid++;
+            group = $scope.groups.filter(function(g){return g.id == group_id})[0];
+            group.links.push( {id: $scope.last_linkid, text: this.linktext, url: this.url, clicks: 0} );
+            this.linktext = '';
+            this.url = '';
+          };
+
+          $scope.deleteLink = function(group_id, link_id) {
+            var group = $scope.groups.filter(function(g){return g.id == group_id})[0];
+            group.links = group.links.filter(function(link){return link.id != link_id})
+          }
+
+          $scope.linkClick = function(group_id, link_id) {
+            var group = $scope.groups.filter(function(g){return g.id == group_id})[0];
+            group.links.filter(function(link){return link.id == link_id})[0].clicks++;
+            group.total_clicks++;
           };
 
         }]);
@@ -26,17 +46,26 @@
   </head>
   <body ng-controller="LinkController">
 
-    <form ng-submit="add()">
+    <form ng-submit="addGroup()">
       <input type="text" ng-model="text">
-      <input type="text" ng-model="url" placeholder="http://">
-      <button type="submit">Add Link</button>
+      <button type="submit">Add Group</button>
     </form>
 
     <ol>
-      <li ng-repeat="link in links | orderBy:'-clicks'">
-        <!-- link below temporarily disabled via js -->
-        <a href="javascript:void(0)/*{{link.url}}*/" ng-click="link.clicks=link.clicks+1">{{link.text}}</a>
-        <button ng-click="delete($index)" title="delete">x</button>
+      <li ng-repeat="group in groups | orderBy:'-total_clicks'">
+        {{group.text}}
+        <ol>
+          <li ng-repeat="link in group.links | orderBy:'-clicks'">
+            <!-- link below temporarily disabled via js -->
+            <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(group.id, link.id)">{{link.text}}</a>
+            <button ng-click="deleteLink(group.id,link.id)" title="delete">x</button><!-- fix -->
+          </li>
+        </ol>
+        <form ng-submit="addLink(group.id)">
+          <input type="text" ng-model="linktext">
+          <input type="text" ng-model="url" placeholder="http://">
+          <button type="submit">Add Link</button>
+        </form>
       </li>
     </ol>
 
