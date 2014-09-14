@@ -43,6 +43,46 @@
         }]);
     </script>
 
+    <style>
+      body, input, button {
+        font-size: 1.1em;
+      }
+      body {
+        font-family: Arial, Helvetica, Sans-serif;
+      }
+      ol {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      li {
+        font-weight: bold;
+      }
+      li li, li form {
+        font-weight: normal;
+      }
+      li form {
+        visibility: hidden;
+      }
+      li:hover form {
+        visibility: visible;
+      }
+      button {
+        cursor: pointer;
+      }
+      li li button {
+        /* todo: better button styles. maybe borrow from bootstrap */
+        line-height: 0.6em;
+        border: 1px solid white;
+        border-radius: 5px;
+        background-color: transparent;
+        font-weight: bold;
+        color: red;
+      }
+      li li button:hover {
+        border-color: black;
+      }
+    </style>
+
   </head>
   <body ng-controller="LinkController">
 
@@ -63,7 +103,7 @@
         </ol>
         <form ng-submit="addLink(group.id)">
           <input type="text" ng-model="linktext">
-          <input type="text" ng-model="url" placeholder="http://">
+          <input type="url" ng-model="url" placeholder="http://">
           <button type="submit">Add Link</button>
         </form>
       </li>
