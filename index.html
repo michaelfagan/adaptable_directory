@@ -9,9 +9,17 @@
 
     <script type="text/javascript">
       angular.module('LinkApp', [])
+
+        .filter('in_group', function() {
+          return function(links, group_id) {
+            return links.filter(function(l){return l.group_id == group_id})
+          };
+        })
+
         .controller('LinkController', ['$scope', function($scope) {
 
           $scope.groups = [];
+          $scope.links = [];
           $scope.last_groupid = 0;
           $scope.last_linkid = 0;
 
@@ -23,21 +31,19 @@
 
           $scope.addLink = function(group_id) {
             $scope.last_linkid++;
-            group = $scope.groups.filter(function(g){return g.id == group_id})[0];
-            group.links.push( {id: $scope.last_linkid, text: this.linktext, url: this.url, clicks: 0} );
+            $scope.links.push( {id: $scope.last_linkid, group_id: group_id, text: this.linktext, url: this.url, clicks: 0} );
             this.linktext = '';
             this.url = '';
           };
 
-          $scope.deleteLink = function(group_id, link_id) {
-            var group = $scope.groups.filter(function(g){return g.id == group_id})[0];
-            group.links = group.links.filter(function(link){return link.id != link_id})
+          $scope.deleteLink = function(link_id) {
+            $scope.links = $scope.links.filter(function(link){return link.id != link_id})
           }
 
-          $scope.linkClick = function(group_id, link_id) {
-            var group = $scope.groups.filter(function(g){return g.id == group_id})[0];
-            group.links.filter(function(link){return link.id == link_id})[0].clicks++;
-            group.total_clicks++;
+          $scope.linkClick = function(link_id) {
+            var link = $scope.links.filter(function(l){return l.id == link_id})[0];
+            link.clicks++;
+            $scope.groups.filter(function(g){return g.id == link.group_id})[0].total_clicks++;
           };
 
         }]);
@@ -95,10 +101,10 @@
       <li ng-repeat="group in groups | orderBy:'-total_clicks'">
         {{group.text}}
         <ol>
-          <li ng-repeat="link in group.links | orderBy:'-clicks'">
+          <li ng-repeat="link in links | in_group:group.id | orderBy:'-clicks'">
             <!-- link below temporarily disabled via js -->
-            <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(group.id, link.id)">{{link.text}}</a>
-            <button ng-click="deleteLink(group.id,link.id)" title="delete">x</button><!-- fix -->
+            <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(link.id)">{{link.text}}</a>
+            <button ng-click="deleteLink(link.id)" title="delete">x</button><!-- fix -->
           </li>
         </ol>
         <form ng-submit="addLink(group.id)">
