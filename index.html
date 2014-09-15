@@ -16,12 +16,19 @@
           };
         })
 
+        .filter('above_threshold', function() {
+          return function(links, position) {
+            return links.slice(0, position);
+          };
+        })
+
         .controller('LinkController', ['$scope', function($scope) {
 
           $scope.groups = [];
           $scope.links = [];
           $scope.last_groupid = 0;
           $scope.last_linkid = 0;
+          $scope.display_num = 20;
 
           $scope.addGroup = function() {
             $scope.last_groupid++;
@@ -42,8 +49,10 @@
 
           $scope.linkClick = function(link_id) {
             var link = $scope.links.filter(function(l){return l.id == link_id})[0];
+            // add a click to the link, count it in the link's group, and re-sort all links by clicks
             link.clicks++;
             $scope.groups.filter(function(g){return g.id == link.group_id})[0].total_clicks++;
+            $scope.links.sort(function(a,b){ return b.clicks-a.clicks; });
           };
 
         }]);
@@ -87,6 +96,9 @@
       li li button:hover {
         border-color: black;
       }
+      input[type='number'] {
+        width: 2em;
+      }
     </style>
 
   </head>
@@ -97,13 +109,19 @@
       <button type="submit">Add Group</button>
     </form>
 
+    <label>
+      Display the top
+      <input type="number" ng-model="display_num" min="1">
+      links
+    </label>
+
     <ol>
       <li ng-repeat="group in groups | orderBy:'-total_clicks'">
         {{group.text}}
         <ol>
-          <li ng-repeat="link in links | in_group:group.id | orderBy:'-clicks'">
+          <li ng-repeat="link in links | above_threshold:display_num | in_group:group.id | orderBy:'-clicks'">
             <!-- link below temporarily disabled via js -->
-            <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(link.id)">{{link.text}}</a>
+            <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(link.id)" title="clicked {{link.clicks}} times">{{link.text}}</a>
             <button ng-click="deleteLink(link.id)" title="delete">x</button><!-- fix -->
           </li>
         </ol>
