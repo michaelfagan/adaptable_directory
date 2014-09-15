@@ -17,8 +17,8 @@ Create groups (sections), and then add links to them. Click on them to create us
 * The sorting algorithm now used is overly simple, just the link count. This will need to be changed.
 * Backend for data storage
 * Split ui into an 'edit/admin' interface and a 'view' interface
-** In view interface, don't show empty categories
-** In view interface, collapse multiple categories with only a single link into a single 'Misc' group - maybe (but wouldn't it need to be listed last then?)
+  * In view interface, don't show empty categories
+  * In view interface, collapse multiple categories with only a single link into a single 'Misc' group - maybe (but wouldn't it need to be listed last then?)
 * Allow multiple versions of text for a particular link and use for A/B testing
 * Allow links to be arranged into different groups (card sorting...) and use for A/B testing
 
