@@ -11,6 +11,7 @@ Create groups (sections), and then add links to them. Click on them to create us
 
 # To-do List
 * Add ability to delete groups
+* Add ability to edit text/urls of groups and links
 * Groups should be sorted by the sum of scores of their visible links only - maybe
 * Allow group headings to themselves be links, which are also tracked
 * Allow a third level of hierarchy for links - but no more
