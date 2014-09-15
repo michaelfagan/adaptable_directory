@@ -29,7 +29,7 @@
 
           $scope.addGroup = function() {
             $scope.last_groupid++;
-            $scope.groups.push({ id: $scope.last_groupid, text: $scope.text, links: [], total_clicks: 0 });
+            $scope.groups.push({ id: $scope.last_groupid, text: $scope.text, links: [], total_clicks: 0, adding_link: true });
             $scope.text = '';
           };
 
@@ -38,6 +38,7 @@
             $scope.links.push( {id: $scope.last_linkid, group_id: group_id, text: this.linktext, url: this.url, clicks: 0} );
             this.linktext = '';
             this.url = '';
+            $scope.groups.filter(function(g){return g.id == group_id})[0].adding_link = false;
           };
 
           $scope.deleteLink = function(link_id) {
@@ -72,17 +73,21 @@
       li li, li form {
         font-weight: normal;
       }
-      li form {
-        visibility: hidden;
-      }
-      li:hover form {
-        visibility: visible;
+      input[type='number'] {
+        width: 2em;
       }
       button {
         cursor: pointer;
       }
+      li button {
+        visibility: hidden;
+      }
+      li:hover button, li form button {
+        visibility: visible;
+      }
+      /* delete link button */
+      /* todo: better button styles. maybe borrow from bootstrap */
       li li button {
-        /* todo: better button styles. maybe borrow from bootstrap */
         line-height: 0.6em;
         border: 1px solid white;
         border-radius: 5px;
@@ -92,9 +97,6 @@
       }
       li li button:hover {
         border-color: black;
-      }
-      input[type='number'] {
-        width: 2em;
       }
     </style>
 
@@ -119,10 +121,11 @@
           <li ng-repeat="link in links | above_threshold:display_num | in_group:group.id | orderBy:'-clicks'">
             <!-- link below temporarily disabled via js -->
             <a href="javascript:void(0)/*{{link.url}}*/" ng-click="linkClick(link.id)" title="clicked {{link.clicks}} times">{{link.text}}</a>
-            <button ng-click="deleteLink(link.id)" title="delete">x</button><!-- fix -->
+            <button ng-click="deleteLink(link.id)" title="delete">x</button>
           </li>
         </ol>
-        <form ng-submit="addLink(group.id)">
+        <button ng-show="!group.adding_link" ng-click="group.adding_link = true">Add Link</button>
+        <form ng-submit="addLink(group.id)" ng-show="group.adding_link">
           <input type="text" ng-model="linktext">
           <input type="url" ng-model="url" placeholder="http://">
           <button type="submit">Add Link</button>

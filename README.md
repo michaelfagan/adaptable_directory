@@ -10,6 +10,7 @@ Create groups (sections), and then add links to them. Click on them to create us
 * Links do not actually open web pages so as not to be annoying
 
 # To-do List
+* ui cleanup. set focus on various occasions; maybe add animations
 * Add ability to delete groups
 * Add ability to edit text/urls of groups and links
 * Groups should be sorted by the sum of scores of their visible links only - maybe
