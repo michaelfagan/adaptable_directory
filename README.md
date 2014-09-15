@@ -13,6 +13,7 @@ Create groups (sections), and then add links to them. Click on them to create us
 # To-do List
 * ui cleanup. set focus on various occasions; maybe add animations
 * Add ability to delete groups
+* Instead of adjusting the number of links via an input field, have it show however many links fit within the current screen size - possibly with a mechanism to see more/all
 * Add ability to edit text/urls of groups and links
 * Groups should be sorted by the sum of scores of their visible links only - maybe
 * Allow group headings to themselves be links, which are also tracked
