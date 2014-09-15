@@ -8,6 +8,7 @@ Create groups (sections), and then add links to them. Click on them to create us
 ## Note
 * There is no back-end at all, so data is not persisted
 * Links do not actually open web pages so as not to be annoying
+* There are no tests at all as this is a prototype and a final product, if any, may be built with a different stack
 
 # To-do List
 * ui cleanup. set focus on various occasions; maybe add animations
